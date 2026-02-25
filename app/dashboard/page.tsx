@@ -388,11 +388,13 @@ function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
     setMsg('')
     // Check if profile exists
     const { data: existing } = await supabase.from('profiles').select('id').eq('user_id', user.id).single()
-    let error
+    let error: any
     if (existing) {
-      ({ error } = await supabase.from('profiles').update(data).eq('user_id', user.id))
+      const res = await supabase.from('profiles').update(data).eq('user_id', user.id)
+      error = res.error
     } else {
-      ({ error } = await supabase.from('profiles').insert({ ...data, user_id: user.id }))
+      const res = await supabase.from('profiles').insert({ ...data, user_id: user.id })
+      error = res.error
     }
     setSaving(false)
     if (error) setMsg(`❌ Error: ${error.message}`)
