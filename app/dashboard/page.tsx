@@ -394,10 +394,10 @@ function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
     const { data: existing } = await supabase.from('profiles').select('id').eq('user_id', user.id).single()
     let error: any
     if (existing) {
-      const { error: updateError } = await supabase.from('profiles').update(data).eq('user_id', user.id)
+      const { error: updateError } = await supabase.from('profiles').update(data as any).eq('user_id', user.id)
       error = updateError
     } else {
-      const { error: insertError } = await supabase.from('profiles').insert({ ...data, user_id: user.id })
+      const { error: insertError } = await supabase.from('profiles').insert(({ ...data, user_id: user.id } as any))
       error = insertError
     }
     setSaving(false)
