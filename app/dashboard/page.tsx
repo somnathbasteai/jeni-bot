@@ -50,14 +50,14 @@ export default function Dashboard() {
     const today = new Date().toISOString().split('T')[0]
 
     const [profileR, incomeR, emisR, subsR, projR, tasksR, goalsR, healthR] = await Promise.all([
-      supabase.from('profiles').select('*').eq('user_id', userId).single(),
-      supabase.from('income').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1),
-      supabase.from('emis').select('*').eq('user_id', userId).eq('status', 'active'),
-      supabase.from('subscriptions').select('*').eq('user_id', userId).eq('status', 'active'),
-      supabase.from('projects').select('*').eq('user_id', userId),
-      supabase.from('tasks').select('*').eq('user_id', userId).eq('is_done', false).order('due_date'),
-      supabase.from('goals').select('*').eq('user_id', userId).eq('status', 'in_progress'),
-      supabase.from('health_logs').select('*').eq('user_id', userId).eq('date', today).single(),
+      (supabase as any).from('profiles').select('*').eq('user_id', userId).single(),
+      (supabase as any).from('income').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1),
+      (supabase as any).from('emis').select('*').eq('user_id', userId).eq('status', 'active'),
+      (supabase as any).from('subscriptions').select('*').eq('user_id', userId).eq('status', 'active'),
+      (supabase as any).from('projects').select('*').eq('user_id', userId),
+      (supabase as any).from('tasks').select('*').eq('user_id', userId).eq('is_done', false).order('due_date'),
+      (supabase as any).from('goals').select('*').eq('user_id', userId).eq('status', 'in_progress'),
+      (supabase as any).from('health_logs').select('*').eq('user_id', userId).eq('date', today).single(),
     ])
 
     setProfile(profileR.data)
@@ -375,7 +375,7 @@ function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
   async function saveData(table: string, data: any) {
     setSaving(true)
     setMsg('')
-    const { error } = await supabase.from(table).insert({ ...data, user_id: user.id })
+    const { error } = await (supabase as any).from(table).insert({ ...data, user_id: user.id })
     setSaving(false)
     if (error) {
       setMsg(`❌ Error: ${error.message}`)
@@ -391,13 +391,13 @@ function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
     if (!user) return
     
     // Check if profile exists
-    const { data: existing } = await supabase.from('profiles').select('id').eq('user_id', user.id).single()
+    const { data: existing } = await (supabase as any).from('profiles').select('id').eq('user_id', user.id).single()
     let error: any
     if (existing) {
-      const { error: updateError } = await supabase.from('profiles').update(data as any).eq('user_id', user.id)
+      const { error: updateError } = await (supabase as any).from('profiles').update(data).eq('user_id', user.id)
       error = updateError
     } else {
-      const { error: insertError } = await supabase.from('profiles').insert(({ ...data, user_id: user.id } as any))
+      const { error: insertError } = await (supabase as any).from('profiles').insert({ ...data, user_id: user.id })
       error = insertError
     }
     setSaving(false)

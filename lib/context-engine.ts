@@ -25,17 +25,17 @@ export async function buildLifeContext(userId: string): Promise<LifeContext> {
     healthRes,
     chatRes,
   ] = await Promise.all([
-    supabase.from('profiles').select('*').eq('user_id', userId).single(),
-    supabase.from('income').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1),
-    supabase.from('emis').select('*').eq('user_id', userId).eq('status', 'active'),
-    supabase.from('subscriptions').select('*').eq('user_id', userId).eq('status', 'active'),
-    supabase.from('expenses').select('*').eq('user_id', userId).gte('date', monthStart).order('date', { ascending: false }),
-    supabase.from('projects').select('*').eq('user_id', userId).order('priority', { ascending: true }),
-    supabase.from('tasks').select('*').eq('user_id', userId).eq('is_done', false).order('due_date', { ascending: true }).limit(20),
-    supabase.from('goals').select('*').eq('user_id', userId).eq('status', 'in_progress'),
-    supabase.from('schedule').select('*').eq('user_id', userId).eq('date', today).order('time', { ascending: true }),
-    supabase.from('health_logs').select('*').eq('user_id', userId).eq('date', today).single(),
-    supabase.from('chat_history').select('message, role').eq('user_id', userId).order('created_at', { ascending: false }).limit(10),
+    (supabase as any).from('profiles').select('*').eq('user_id', userId).single(),
+    (supabase as any).from('income').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1),
+    (supabase as any).from('emis').select('*').eq('user_id', userId).eq('status', 'active'),
+    (supabase as any).from('subscriptions').select('*').eq('user_id', userId).eq('status', 'active'),
+    (supabase as any).from('expenses').select('*').eq('user_id', userId).gte('date', monthStart).order('date', { ascending: false }),
+    (supabase as any).from('projects').select('*').eq('user_id', userId).order('priority', { ascending: true }),
+    (supabase as any).from('tasks').select('*').eq('user_id', userId).eq('is_done', false).order('due_date', { ascending: true }).limit(20),
+    (supabase as any).from('goals').select('*').eq('user_id', userId).eq('status', 'in_progress'),
+    (supabase as any).from('schedule').select('*').eq('user_id', userId).eq('date', today).order('time', { ascending: true }),
+    (supabase as any).from('health_logs').select('*').eq('user_id', userId).eq('date', today).single(),
+    (supabase as any).from('chat_history').select('message, role').eq('user_id', userId).order('created_at', { ascending: false }).limit(10),
   ])
 
   const latestIncome = incomeRes.data?.[0] || null
