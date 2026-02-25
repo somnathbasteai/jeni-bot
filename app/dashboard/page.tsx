@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import type { User } from '@supabase/supabase-js'
 import type { Profile, Income, EMI, Subscription, Project, Task, Goal, HealthLog } from '@/lib/types'
 
 // ═══════════════════════════════════════════════════
@@ -20,7 +21,7 @@ const fmt = (n: number) => `₹${n.toLocaleString('en-IN')}`
 
 export default function Dashboard() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState('chat')
   const [loading, setLoading] = useState(true)
 
@@ -383,9 +384,11 @@ function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
     }
   }
 
-  async function upsertProfile(data: any) {
+  async function upsertProfile(data: Partial<Profile>) {
     setSaving(true)
     setMsg('')
+    if (!user) return
+    
     // Check if profile exists
     const { data: existing } = await supabase.from('profiles').select('id').eq('user_id', user.id).single()
     let error: any
