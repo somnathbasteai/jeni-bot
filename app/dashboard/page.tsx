@@ -130,7 +130,7 @@ export default function Dashboard() {
             projects={projects} tasks={tasks} goals={goals} todayHealth={todayHealth}
           />
         )}
-        {activeTab === 'data' && (
+        {activeTab === 'data' && user && (
           <DataView user={user} onRefresh={() => loadAllData(user.id)} />
         )}
         {activeTab === 'settings' && <SetupGuide />}
@@ -357,6 +357,7 @@ function OverviewView({ profile, income, netSalary, emis, totalEMI, subs, totalS
 // ═══════════════════════════════════════════════════
 
 function DataView({ user, onRefresh }: { user: any; onRefresh: () => void }) {
+  if (!user) return null
   const [section, setSection] = useState('profile')
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
