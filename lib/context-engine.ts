@@ -48,9 +48,9 @@ export async function buildLifeContext(userId: string): Promise<LifeContext> {
       - latestIncome.deductions_pf - latestIncome.deductions_tax - latestIncome.deductions_other
     : 0
 
-  const totalEMI = activeEMIs.reduce((sum, e) => sum + e.emi_amount, 0)
-  const totalSubs = activeSubs.reduce((sum, s) => sum + s.amount, 0)
-  const monthlyExpenseTotal = recentExpenses.reduce((sum, e) => sum + e.amount, 0)
+  const totalEMI = activeEMIs.reduce((sum: number, e) => sum + e.emi_amount, 0)
+  const totalSubs = activeSubs.reduce((sum: number, s) => sum + s.amount, 0)
+  const monthlyExpenseTotal = recentExpenses.reduce((sum: number, e) => sum + e.amount, 0)
 
   // Build recent chat context for continuity
   const recentChatContext = (chatRes.data || [])
